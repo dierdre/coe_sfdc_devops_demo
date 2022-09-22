@@ -1,5 +1,5 @@
 public with sharing class Camping {
     public Camping() {
-        system.debug('hello world');
+        system.debug('hello cleveland');
     }
 }
