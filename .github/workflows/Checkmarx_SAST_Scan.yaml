@@ -8,7 +8,7 @@ jobs:
       uses: actions/checkout@v1
     - name: Checkmarx Action
       # uses: checkmarx-ts/checkmarx-github-action@<version>
-      uses: uhg-actions/checkmarx-github-action@v2020.2.11
+      uses: uhg-actions/checkmarx-github-action@v2020.2.7
       with:
         # cxServer: https://checkmarx.uhc.com/
         csServer: https://checkmarx.uhc.com/cxwebclient
