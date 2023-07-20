@@ -8,7 +8,7 @@ jobs:
       uses: actions/checkout@v1
     - name: Checkmarx Action
       # uses: checkmarx-ts/checkmarx-github-action@<version>
-      uses: uhg-actions/checkmarx-github-action@v9.4 HF24
+      uses: uhg-actions/checkmarx-github-action@v9.00.1
       with:
         cxServer: https://checkmarx.uhc.com/
         cxUsername: ${{ secrets.CX_USERNAME }}
