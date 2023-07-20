@@ -10,7 +10,8 @@ jobs:
       # uses: checkmarx-ts/checkmarx-github-action@<version>
       uses: uhg-actions/checkmarx-github-action@v9.00.1
       with:
-        cxServer: https://checkmarx.uhc.com/
+        # cxServer: https://checkmarx.uhc.com/
+        csServer: https://checkmarx.uhc.com/cxwebclient
         cxUsername: ${{ secrets.CX_USERNAME }}
         cxPassword: ${{ secrets.CX_PASSWORD }}
         cxTeam: \CxServer\SP\Company\TeamA
