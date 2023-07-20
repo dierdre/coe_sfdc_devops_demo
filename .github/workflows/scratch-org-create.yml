@@ -1,0 +1,28 @@
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug 
+      print_tags:
+        description: 'True to print to STDOUT'
+        required: true 
+        type: boolean 
+ 
+
+# Create scratch org
+jobs:
+  print-tag:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.print_tags}}
+    steps:
+      - name: Create scratch org
+        uses: forcedotcom/salesforcedx-actions@master
+        with:
+          args: 'force:org:create sourceOrg=00D8V0000028tTO'

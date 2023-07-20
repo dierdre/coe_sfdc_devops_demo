@@ -1,0 +1,100 @@
+#This file is part of the Optum code scanning requirements, for all UHG organizations.   It is 
+#required, but we are attempting to deploy it to all repositories in a way that does not break 
+#any branch protection rules in place.  The script creating these pull requests don’t know about 
+#any bespoke protection rules or requirements.  When you see this – and it was successful in 
+#building the project – please merge the pull request.  The scan will then be applied to the 
+#default branch and developer information will be present under the code scanning tab.
+
+#Automation will be cleaning up PRs that are not merged, so if you are part of the organization 
+#that has a significant number of these, we will be working with the Organization owners to merge 
+#outstanding PRs.
+
+#When this file is added, it also performs a code scan.  If there are critical or high severity 
+#issues, it will flag that step as failing.  It is up to you on resolving those issues – but the 
+#issue is with the existing code and not the scanner.  You can choose to raise or lower the thresholds 
+#in the repository settings, mark the items found with an appropriate tag, or even ignore it for 
+#the time being.
+
+#Automation will be performing further updates to this file.  Once the build is successful, the cron 
+#aspect will be removed.
+
+#For projects that have failing builds, we have teams that are working to resolve build issues.   
+#Typically, older Java code will require the Java actions below to be uncommented.  Additional 
+#training, documentation, office hours, and help is available.
+
+#For projects where this is successfully scanning the default branch, Contrast may be discontinued.
+
+#For questions, and you want a human, reach out Chris.Rothwell@Optum.com with the EIS team.  More 
+#information is available here: https://appsec.optum.com/docs/pullreq/
+#
+#Added via Firehose
+
+name: "Optum CodeQL Analysis"
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+  # Please don't modify this, for now.  We will be removing it
+  # in a later pull request, once the scan is succesful and 
+  # scanning on PR only.
+  schedule:
+    - cron: '45 4 * * 2'
+
+jobs:
+  analyze:
+    name: Analyze ${{github.repository}} (${{matrix.language}})
+    runs-on: [ uhg-ghas ]
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # If you need a specific version of Java, an LTS runtime can be targeted.
+    # - uses: actions/setup-java@v2
+    #  with:
+    #    distribution: 'adopt' # See 'Supported distributions' for available options
+    #    java-version: '8'
+    #    overwrite-settings: false     
+
+    # If you need a custom version of Maven (default is 3.8.x), it can
+    # can be added here.
+    #- name: Set up Maven
+    #  uses: stCarolas/setup-maven@v4.4
+    #  with:
+    #    maven-version: 3.1.1
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+        queries: security-extended,security-and-quality
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    # ℹ️ Command-line programs to run using the OS shell.
+    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+
+    #   If the Autobuild fails above, remove it and uncomment the following three lines. 
+    #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
+
+    # - run: |
+    #   echo "Run, Build Application using script"
+    #   ./location_of_script_within_repo/buildscript.
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      
