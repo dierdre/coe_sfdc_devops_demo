@@ -1,4 +1,10 @@
 name: Checkmarx SAST Scan
+
+
+#on:
+#  issues:
+#    types: [opened]
+
 on: [push]
 jobs:
   build:
@@ -6,12 +12,27 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Checkmarx Action
-      # uses: checkmarx-ts/checkmarx-github-action@<version>
-      uses: uhg-actions/checkmarx-github-action@v2020.1.12
+    #- name: Checkmarx Action
+     # # uses: checkmarx-ts/checkmarx-github-action@<version>
+     # uses: uhg-actions/checkmarx-github-action@v2020.1.12
+     # with:
+     #   # cxServer: https://checkmarx.uhc.com/
+     #   csServer: https://checkmarx.uhc.com/cxwebclient
+     #   cxUsername: ${{ secrets.CX_USERNAME }}
+     #   cxPassword: ${{ secrets.CX_PASSWORD }}
+     #   cxTeam: \CxServer\SP\Company\TeamA
+
+    - name: View context attributes
+      uses: actions/github-script@v6
       with:
-        # cxServer: https://checkmarx.uhc.com/
-        csServer: https://checkmarx.uhc.com/cxwebclient
-        cxUsername: ${{ secrets.CX_USERNAME }}
-        cxPassword: ${{ secrets.CX_PASSWORD }}
-        cxTeam: \CxServer\SP\Company\TeamA
+        script: console.log(context)
+    - name: Comment on an issue
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '👋 Thanks for reporting!'
+          })
